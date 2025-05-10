@@ -1,1 +1,580 @@
-{"metadata":{"kernelspec":{"language":"python","display_name":"Python 3","name":"python3"},"language_info":{"name":"python","version":"3.11.11","mimetype":"text/x-python","codemirror_mode":{"name":"ipython","version":3},"pygments_lexer":"ipython3","nbconvert_exporter":"python","file_extension":".py"},"kaggle":{"accelerator":"none","dataSources":[{"sourceId":86518,"databundleVersionId":9809560,"sourceType":"competition"}],"dockerImageVersionId":31012,"isInternetEnabled":true,"language":"python","sourceType":"notebook","isGpuEnabled":false}},"nbformat_minor":4,"nbformat":4,"cells":[{"cell_type":"code","source":"# This Python 3 environment comes with many helpful analytics libraries installed\n# It is defined by the kaggle/python Docker image: https://github.com/kaggle/docker-python\n# For example, here's several helpful packages to load\n\nimport numpy as np # linear algebra\nimport pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)\n\n# Input data files are available in the read-only \"../input/\" directory\n# For example, running this (by clicking run or pressing Shift+Enter) will list all files under the input directory\n\nimport os\nfor dirname, _, filenames in os.walk('/kaggle/input'):\n    for filename in filenames:\n        print(os.path.join(dirname, filename))\n\n# You can write up to 20GB to the current directory (/kaggle/working/) that gets preserved as output when you create a version using \"Save & Run All\" \n# You can also write temporary files to /kaggle/temp/, but they won't be saved outside of the current session","metadata":{"_uuid":"8f2839f25d086af736a60e9eeb907d3b93b6e0e5","_cell_guid":"b1076dfc-b9ad-4769-8c92-a6c4dae69d19","trusted":true,"execution":{"iopub.status.busy":"2025-05-10T14:57:12.675381Z","iopub.execute_input":"2025-05-10T14:57:12.675657Z","iopub.status.idle":"2025-05-10T14:57:14.991396Z","shell.execute_reply.started":"2025-05-10T14:57:12.675611Z","shell.execute_reply":"2025-05-10T14:57:14.990466Z"}},"outputs":[{"name":"stdout","text":"/kaggle/input/llm-classification-finetuning/sample_submission.csv\n/kaggle/input/llm-classification-finetuning/train.csv\n/kaggle/input/llm-classification-finetuning/test.csv\n","output_type":"stream"}],"execution_count":1},{"cell_type":"code","source":"import pandas as pd\n\n# Replace with the path to your train.csv file\nfile_path = '/kaggle/input/llm-classification-finetuning/train.csv'\nfile_path_test ='/kaggle/input/llm-classification-finetuning/train.csv'\n# Load the dataset\ndata = pd.read_csv(file_path)\ntest_data = pd.read_csv(file_path_test)\n# Display the first few rows to check the data\ndata.head()\n","metadata":{"trusted":true,"execution":{"iopub.status.busy":"2025-05-10T14:57:14.992273Z","iopub.execute_input":"2025-05-10T14:57:14.992678Z","iopub.status.idle":"2025-05-10T14:57:21.794741Z","shell.execute_reply.started":"2025-05-10T14:57:14.992630Z","shell.execute_reply":"2025-05-10T14:57:21.794011Z"}},"outputs":[{"execution_count":2,"output_type":"execute_result","data":{"text/plain":"       id             model_a              model_b  \\\n0   30192  gpt-4-1106-preview           gpt-4-0613   \n1   53567           koala-13b           gpt-4-0613   \n2   65089  gpt-3.5-turbo-0613       mistral-medium   \n3   96401    llama-2-13b-chat  mistral-7b-instruct   \n4  198779           koala-13b   gpt-3.5-turbo-0314   \n\n                                              prompt  \\\n0  [\"Is it morally right to try to have a certain...   \n1  [\"What is the difference between marriage lice...   \n2  [\"explain function calling. how would you call...   \n3  [\"How can I create a test set for a very rare ...   \n4  [\"What is the best way to travel from Tel-Aviv...   \n\n                                          response_a  \\\n0  [\"The question of whether it is morally right ...   \n1  [\"A marriage license is a legal document that ...   \n2  [\"Function calling is the process of invoking ...   \n3  [\"Creating a test set for a very rare category...   \n4  [\"The best way to travel from Tel Aviv to Jeru...   \n\n                                          response_b  winner_model_a  \\\n0  [\"As an AI, I don't have personal beliefs or o...               1   \n1  [\"A marriage license and a marriage certificat...               0   \n2  [\"Function calling is the process of invoking ...               0   \n3  [\"When building a classifier for a very rare c...               1   \n4  [\"The best way to travel from Tel-Aviv to Jeru...               0   \n\n   winner_model_b  winner_tie  \n0               0           0  \n1               1           0  \n2               0           1  \n3               0           0  \n4               1           0  ","text/html":"<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>id</th>\n      <th>model_a</th>\n      <th>model_b</th>\n      <th>prompt</th>\n      <th>response_a</th>\n      <th>response_b</th>\n      <th>winner_model_a</th>\n      <th>winner_model_b</th>\n      <th>winner_tie</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>30192</td>\n      <td>gpt-4-1106-preview</td>\n      <td>gpt-4-0613</td>\n      <td>[\"Is it morally right to try to have a certain...</td>\n      <td>[\"The question of whether it is morally right ...</td>\n      <td>[\"As an AI, I don't have personal beliefs or o...</td>\n      <td>1</td>\n      <td>0</td>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>53567</td>\n      <td>koala-13b</td>\n      <td>gpt-4-0613</td>\n      <td>[\"What is the difference between marriage lice...</td>\n      <td>[\"A marriage license is a legal document that ...</td>\n      <td>[\"A marriage license and a marriage certificat...</td>\n      <td>0</td>\n      <td>1</td>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>65089</td>\n      <td>gpt-3.5-turbo-0613</td>\n      <td>mistral-medium</td>\n      <td>[\"explain function calling. how would you call...</td>\n      <td>[\"Function calling is the process of invoking ...</td>\n      <td>[\"Function calling is the process of invoking ...</td>\n      <td>0</td>\n      <td>0</td>\n      <td>1</td>\n    </tr>\n    <tr>\n      <th>3</th>\n      <td>96401</td>\n      <td>llama-2-13b-chat</td>\n      <td>mistral-7b-instruct</td>\n      <td>[\"How can I create a test set for a very rare ...</td>\n      <td>[\"Creating a test set for a very rare category...</td>\n      <td>[\"When building a classifier for a very rare c...</td>\n      <td>1</td>\n      <td>0</td>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>4</th>\n      <td>198779</td>\n      <td>koala-13b</td>\n      <td>gpt-3.5-turbo-0314</td>\n      <td>[\"What is the best way to travel from Tel-Aviv...</td>\n      <td>[\"The best way to travel from Tel Aviv to Jeru...</td>\n      <td>[\"The best way to travel from Tel-Aviv to Jeru...</td>\n      <td>0</td>\n      <td>1</td>\n      <td>0</td>\n    </tr>\n  </tbody>\n</table>\n</div>"},"metadata":{}}],"execution_count":2},{"cell_type":"code","source":"# Check data types and missing values\ndata.info()\n\n# Check basic statistics of numerical columns\ndata.describe()\n\n# Check for missing values\ndata.isnull().sum()\n\n\n\n# If you're using a multi-class target variable, check all columns of interest\nprint(data[['winner_model_a', 'winner_model_b', 'winner_tie']].apply(pd.Series.value_counts))\n","metadata":{"trusted":true,"execution":{"iopub.status.busy":"2025-05-10T14:57:21.796432Z","iopub.execute_input":"2025-05-10T14:57:21.796730Z","iopub.status.idle":"2025-05-10T14:57:21.895108Z","shell.execute_reply.started":"2025-05-10T14:57:21.796709Z","shell.execute_reply":"2025-05-10T14:57:21.894324Z"}},"outputs":[{"name":"stdout","text":"<class 'pandas.core.frame.DataFrame'>\nRangeIndex: 57477 entries, 0 to 57476\nData columns (total 9 columns):\n #   Column          Non-Null Count  Dtype \n---  ------          --------------  ----- \n 0   id              57477 non-null  int64 \n 1   model_a         57477 non-null  object\n 2   model_b         57477 non-null  object\n 3   prompt          57477 non-null  object\n 4   response_a      57477 non-null  object\n 5   response_b      57477 non-null  object\n 6   winner_model_a  57477 non-null  int64 \n 7   winner_model_b  57477 non-null  int64 \n 8   winner_tie      57477 non-null  int64 \ndtypes: int64(4), object(5)\nmemory usage: 3.9+ MB\n","output_type":"stream"},{"execution_count":3,"output_type":"execute_result","data":{"text/plain":"id                0\nmodel_a           0\nmodel_b           0\nprompt            0\nresponse_a        0\nresponse_b        0\nwinner_model_a    0\nwinner_model_b    0\nwinner_tie        0\ndtype: int64"},"metadata":{}}],"execution_count":3},{"cell_type":"markdown","source":"# Preprocessing","metadata":{}},{"cell_type":"code","source":"from sklearn.preprocessing import LabelEncoder\nencoder = LabelEncoder()\ndata['model_a'] = encoder.fit_transform(data['model_a'])\ndata['model_b'] = encoder.fit_transform(data['model_b'])\ntest_data['model_a'] = encoder.transform(test_data['model_a'])\ntest_data['model_b'] = encoder.transform(test_data['model_b'])","metadata":{"trusted":true,"execution":{"iopub.status.busy":"2025-05-10T14:57:21.896000Z","iopub.execute_input":"2025-05-10T14:57:21.896232Z","iopub.status.idle":"2025-05-10T14:57:22.466405Z","shell.execute_reply.started":"2025-05-10T14:57:21.896212Z","shell.execute_reply":"2025-05-10T14:57:22.465573Z"}},"outputs":[],"execution_count":4},{"cell_type":"code","source":"from sklearn.feature_extraction.text import TfidfVectorizer\n\ndata['combined_text'] = data['prompt'] + ' ' + data['response_a'] + ' ' + data['response_b']\ntest_data['combined_text'] = test_data['prompt'] + ' ' + test_data['response_a'] + ' ' + test_data['response_b']\n\ntfidf = TfidfVectorizer()\n\ntfidf.fit(data['combined_text'])\n\nX_train_tfidf = tfidf.transform(data['combined_text'])\nX_test_tfidf = tfidf.transform(test_data['combined_text'])\n","metadata":{"trusted":true,"execution":{"iopub.status.busy":"2025-05-10T15:11:16.660441Z","iopub.execute_input":"2025-05-10T15:11:16.660794Z","iopub.status.idle":"2025-05-10T15:12:17.714762Z","shell.execute_reply.started":"2025-05-10T15:11:16.660771Z","shell.execute_reply":"2025-05-10T15:12:17.713877Z"}},"outputs":[],"execution_count":14},{"cell_type":"markdown","source":"# Prediction","metadata":{}},{"cell_type":"code","source":"from sklearn.model_selection import cross_val_score, cross_val_predict\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.metrics import accuracy_score","metadata":{"trusted":true,"execution":{"iopub.status.busy":"2025-05-10T15:07:25.183058Z","iopub.execute_input":"2025-05-10T15:07:25.184052Z","iopub.status.idle":"2025-05-10T15:07:25.436112Z","shell.execute_reply.started":"2025-05-10T15:07:25.184020Z","shell.execute_reply":"2025-05-10T15:07:25.434598Z"}},"outputs":[],"execution_count":7},{"cell_type":"code","source":"y_train = data['winner_model_a']  # Example target\n\n# Initialize Logistic Regression (or other classifiers)\nmodel = LogisticRegression(max_iter=1000,multi_class='ovr')\n\n# Perform cross-validation and get the cross-validation scores (accuracy)\ncv_scores = cross_val_score(model, X_train_tfidf, y_train, cv=5, scoring='f1')\n\n# Print the cross-validation results\nprint(f\"Cross-validation scores: {cv_scores}\")\nprint(f\"Mean cross-validation score: {cv_scores.mean()}\")\n\npredictions = cross_val_predict(model, X_train_tfidf, y_train, cv=5, method='predict_proba')\n\n# predictions will have shape (n_samples, n_classes)\n# Example: For 3 classes, each row will have 3 probabilities corresponding to model_a, model_b, and tie\n\n# Print example predictions (probabilities)\nprint(predictions[:5]) ","metadata":{"trusted":true,"execution":{"iopub.status.busy":"2025-05-10T15:12:35.911575Z","iopub.execute_input":"2025-05-10T15:12:35.912024Z","iopub.status.idle":"2025-05-10T15:16:16.927404Z","shell.execute_reply.started":"2025-05-10T15:12:35.911995Z","shell.execute_reply":"2025-05-10T15:16:16.926676Z"}},"outputs":[{"name":"stdout","text":"Cross-validation scores: [0.08891809 0.10601781 0.09152617 0.09887251 0.09362637]\nMean cross-validation score: 0.09579219016108116\n[[0.60275488 0.39724512]\n [0.62327803 0.37672197]\n [0.67474648 0.32525352]\n [0.69165145 0.30834855]\n [0.57853179 0.42146821]]\n","output_type":"stream"}],"execution_count":15},{"cell_type":"code","source":"# Assuming the best model from cross-validation is chosen, we can predict on the test data\n\n# For simplicity, you can just fit the model on the entire dataset once cross-validation is done:\nmodel.fit(X_train_tfidf, y_train)\n\n# Now make predictions on the test data\npredictions = model.predict_proba(X_test_tfidf)\n\n# predictions will have shape (n_samples, 3) for 3 classes (model_a, model_b, tie)\ntest_data['winner_model_a'] = predictions[:, 0]  # Probabilities for model_a\ntest_data['winner_model_b'] = predictions[:, 1]  # Probabilities for model_b\ntest_data['winner_tie'] = 1 - (test_data['winner_model_a'] + test_data['winner_model_b'])\ntest_data['id'] = test_data.index\n\n# Save the results in the required format\noutput = test_data[['id', 'winner_model_a', 'winner_model_b', 'winner_tie']]\noutput.to_csv('predictions.csv', index=False)\n\nprint(output.head())","metadata":{"trusted":true,"execution":{"iopub.status.busy":"2025-05-10T15:19:23.567957Z","iopub.execute_input":"2025-05-10T15:19:23.568467Z","iopub.status.idle":"2025-05-10T15:19:50.796715Z","shell.execute_reply.started":"2025-05-10T15:19:23.568438Z","shell.execute_reply":"2025-05-10T15:19:50.795650Z"}},"outputs":[{"name":"stdout","text":"   id  winner_model_a  winner_model_b  winner_tie\n0   0        0.579693        0.420307         0.0\n1   1        0.664225        0.335775         0.0\n2   2        0.720744        0.279256         0.0\n3   3        0.672279        0.327721         0.0\n4   4        0.646681        0.353319         0.0\n","output_type":"stream"}],"execution_count":17}]}
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "a570da0a",
+   "metadata": {
+    "_cell_guid": "b1076dfc-b9ad-4769-8c92-a6c4dae69d19",
+    "_uuid": "8f2839f25d086af736a60e9eeb907d3b93b6e0e5",
+    "execution": {
+     "iopub.execute_input": "2025-05-10T15:23:36.518384Z",
+     "iopub.status.busy": "2025-05-10T15:23:36.517999Z",
+     "iopub.status.idle": "2025-05-10T15:23:38.704934Z",
+     "shell.execute_reply": "2025-05-10T15:23:38.703648Z"
+    },
+    "papermill": {
+     "duration": 2.192964,
+     "end_time": "2025-05-10T15:23:38.706561",
+     "exception": false,
+     "start_time": "2025-05-10T15:23:36.513597",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "/kaggle/input/llm-classification-finetuning/sample_submission.csv\n",
+      "/kaggle/input/llm-classification-finetuning/train.csv\n",
+      "/kaggle/input/llm-classification-finetuning/test.csv\n"
+     ]
+    }
+   ],
+   "source": [
+    "# This Python 3 environment comes with many helpful analytics libraries installed\n",
+    "# It is defined by the kaggle/python Docker image: https://github.com/kaggle/docker-python\n",
+    "# For example, here's several helpful packages to load\n",
+    "\n",
+    "import numpy as np # linear algebra\n",
+    "import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)\n",
+    "\n",
+    "# Input data files are available in the read-only \"../input/\" directory\n",
+    "# For example, running this (by clicking run or pressing Shift+Enter) will list all files under the input directory\n",
+    "\n",
+    "import os\n",
+    "for dirname, _, filenames in os.walk('/kaggle/input'):\n",
+    "    for filename in filenames:\n",
+    "        print(os.path.join(dirname, filename))\n",
+    "\n",
+    "# You can write up to 20GB to the current directory (/kaggle/working/) that gets preserved as output when you create a version using \"Save & Run All\" \n",
+    "# You can also write temporary files to /kaggle/temp/, but they won't be saved outside of the current session"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "d771b21e",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-05-10T15:23:38.713751Z",
+     "iopub.status.busy": "2025-05-10T15:23:38.713327Z",
+     "iopub.status.idle": "2025-05-10T15:23:44.646318Z",
+     "shell.execute_reply": "2025-05-10T15:23:44.645339Z"
+    },
+    "papermill": {
+     "duration": 5.938055,
+     "end_time": "2025-05-10T15:23:44.647794",
+     "exception": false,
+     "start_time": "2025-05-10T15:23:38.709739",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>id</th>\n",
+       "      <th>model_a</th>\n",
+       "      <th>model_b</th>\n",
+       "      <th>prompt</th>\n",
+       "      <th>response_a</th>\n",
+       "      <th>response_b</th>\n",
+       "      <th>winner_model_a</th>\n",
+       "      <th>winner_model_b</th>\n",
+       "      <th>winner_tie</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>30192</td>\n",
+       "      <td>gpt-4-1106-preview</td>\n",
+       "      <td>gpt-4-0613</td>\n",
+       "      <td>[\"Is it morally right to try to have a certain...</td>\n",
+       "      <td>[\"The question of whether it is morally right ...</td>\n",
+       "      <td>[\"As an AI, I don't have personal beliefs or o...</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>53567</td>\n",
+       "      <td>koala-13b</td>\n",
+       "      <td>gpt-4-0613</td>\n",
+       "      <td>[\"What is the difference between marriage lice...</td>\n",
+       "      <td>[\"A marriage license is a legal document that ...</td>\n",
+       "      <td>[\"A marriage license and a marriage certificat...</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>65089</td>\n",
+       "      <td>gpt-3.5-turbo-0613</td>\n",
+       "      <td>mistral-medium</td>\n",
+       "      <td>[\"explain function calling. how would you call...</td>\n",
+       "      <td>[\"Function calling is the process of invoking ...</td>\n",
+       "      <td>[\"Function calling is the process of invoking ...</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>96401</td>\n",
+       "      <td>llama-2-13b-chat</td>\n",
+       "      <td>mistral-7b-instruct</td>\n",
+       "      <td>[\"How can I create a test set for a very rare ...</td>\n",
+       "      <td>[\"Creating a test set for a very rare category...</td>\n",
+       "      <td>[\"When building a classifier for a very rare c...</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>198779</td>\n",
+       "      <td>koala-13b</td>\n",
+       "      <td>gpt-3.5-turbo-0314</td>\n",
+       "      <td>[\"What is the best way to travel from Tel-Aviv...</td>\n",
+       "      <td>[\"The best way to travel from Tel Aviv to Jeru...</td>\n",
+       "      <td>[\"The best way to travel from Tel-Aviv to Jeru...</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "       id             model_a              model_b  \\\n",
+       "0   30192  gpt-4-1106-preview           gpt-4-0613   \n",
+       "1   53567           koala-13b           gpt-4-0613   \n",
+       "2   65089  gpt-3.5-turbo-0613       mistral-medium   \n",
+       "3   96401    llama-2-13b-chat  mistral-7b-instruct   \n",
+       "4  198779           koala-13b   gpt-3.5-turbo-0314   \n",
+       "\n",
+       "                                              prompt  \\\n",
+       "0  [\"Is it morally right to try to have a certain...   \n",
+       "1  [\"What is the difference between marriage lice...   \n",
+       "2  [\"explain function calling. how would you call...   \n",
+       "3  [\"How can I create a test set for a very rare ...   \n",
+       "4  [\"What is the best way to travel from Tel-Aviv...   \n",
+       "\n",
+       "                                          response_a  \\\n",
+       "0  [\"The question of whether it is morally right ...   \n",
+       "1  [\"A marriage license is a legal document that ...   \n",
+       "2  [\"Function calling is the process of invoking ...   \n",
+       "3  [\"Creating a test set for a very rare category...   \n",
+       "4  [\"The best way to travel from Tel Aviv to Jeru...   \n",
+       "\n",
+       "                                          response_b  winner_model_a  \\\n",
+       "0  [\"As an AI, I don't have personal beliefs or o...               1   \n",
+       "1  [\"A marriage license and a marriage certificat...               0   \n",
+       "2  [\"Function calling is the process of invoking ...               0   \n",
+       "3  [\"When building a classifier for a very rare c...               1   \n",
+       "4  [\"The best way to travel from Tel-Aviv to Jeru...               0   \n",
+       "\n",
+       "   winner_model_b  winner_tie  \n",
+       "0               0           0  \n",
+       "1               1           0  \n",
+       "2               0           1  \n",
+       "3               0           0  \n",
+       "4               1           0  "
+      ]
+     },
+     "execution_count": 2,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "import pandas as pd\n",
+    "\n",
+    "# Replace with the path to your train.csv file\n",
+    "file_path = '/kaggle/input/llm-classification-finetuning/train.csv'\n",
+    "file_path_test ='/kaggle/input/llm-classification-finetuning/train.csv'\n",
+    "# Load the dataset\n",
+    "data = pd.read_csv(file_path)\n",
+    "test_data = pd.read_csv(file_path_test)\n",
+    "# Display the first few rows to check the data\n",
+    "data.head()\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "1be1cd5c",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-05-10T15:23:44.655094Z",
+     "iopub.status.busy": "2025-05-10T15:23:44.654737Z",
+     "iopub.status.idle": "2025-05-10T15:23:44.770087Z",
+     "shell.execute_reply": "2025-05-10T15:23:44.769108Z"
+    },
+    "papermill": {
+     "duration": 0.120826,
+     "end_time": "2025-05-10T15:23:44.771722",
+     "exception": false,
+     "start_time": "2025-05-10T15:23:44.650896",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "<class 'pandas.core.frame.DataFrame'>\n",
+      "RangeIndex: 57477 entries, 0 to 57476\n",
+      "Data columns (total 9 columns):\n",
+      " #   Column          Non-Null Count  Dtype \n",
+      "---  ------          --------------  ----- \n",
+      " 0   id              57477 non-null  int64 \n",
+      " 1   model_a         57477 non-null  object\n",
+      " 2   model_b         57477 non-null  object\n",
+      " 3   prompt          57477 non-null  object\n",
+      " 4   response_a      57477 non-null  object\n",
+      " 5   response_b      57477 non-null  object\n",
+      " 6   winner_model_a  57477 non-null  int64 \n",
+      " 7   winner_model_b  57477 non-null  int64 \n",
+      " 8   winner_tie      57477 non-null  int64 \n",
+      "dtypes: int64(4), object(5)\n",
+      "memory usage: 3.9+ MB\n",
+      "   winner_model_a  winner_model_b  winner_tie\n",
+      "0           37413           37825       39716\n",
+      "1           20064           19652       17761\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Check data types and missing values\n",
+    "data.info()\n",
+    "\n",
+    "# Check basic statistics of numerical columns\n",
+    "data.describe()\n",
+    "\n",
+    "# Check for missing values\n",
+    "data.isnull().sum()\n",
+    "\n",
+    "\n",
+    "\n",
+    "# If you're using a multi-class target variable, check all columns of interest\n",
+    "print(data[['winner_model_a', 'winner_model_b', 'winner_tie']].apply(pd.Series.value_counts))\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "1893582e",
+   "metadata": {
+    "papermill": {
+     "duration": 0.002661,
+     "end_time": "2025-05-10T15:23:44.777389",
+     "exception": false,
+     "start_time": "2025-05-10T15:23:44.774728",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "# Preprocessing"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "84de0141",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-05-10T15:23:44.784491Z",
+     "iopub.status.busy": "2025-05-10T15:23:44.784195Z",
+     "iopub.status.idle": "2025-05-10T15:23:46.699292Z",
+     "shell.execute_reply": "2025-05-10T15:23:46.698303Z"
+    },
+    "papermill": {
+     "duration": 1.92076,
+     "end_time": "2025-05-10T15:23:46.701196",
+     "exception": false,
+     "start_time": "2025-05-10T15:23:44.780436",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "from sklearn.preprocessing import LabelEncoder\n",
+    "encoder = LabelEncoder()\n",
+    "data['model_a'] = encoder.fit_transform(data['model_a'])\n",
+    "data['model_b'] = encoder.fit_transform(data['model_b'])\n",
+    "test_data['model_a'] = encoder.transform(test_data['model_a'])\n",
+    "test_data['model_b'] = encoder.transform(test_data['model_b'])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "5f1fad52",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-05-10T15:23:46.709106Z",
+     "iopub.status.busy": "2025-05-10T15:23:46.708492Z",
+     "iopub.status.idle": "2025-05-10T15:24:45.800031Z",
+     "shell.execute_reply": "2025-05-10T15:24:45.799007Z"
+    },
+    "papermill": {
+     "duration": 59.097473,
+     "end_time": "2025-05-10T15:24:45.802078",
+     "exception": false,
+     "start_time": "2025-05-10T15:23:46.704605",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "from sklearn.feature_extraction.text import TfidfVectorizer\n",
+    "\n",
+    "data['combined_text'] = data['prompt'] + ' ' + data['response_a'] + ' ' + data['response_b']\n",
+    "test_data['combined_text'] = test_data['prompt'] + ' ' + test_data['response_a'] + ' ' + test_data['response_b']\n",
+    "\n",
+    "tfidf = TfidfVectorizer()\n",
+    "\n",
+    "tfidf.fit(data['combined_text'])\n",
+    "\n",
+    "X_train_tfidf = tfidf.transform(data['combined_text'])\n",
+    "X_test_tfidf = tfidf.transform(test_data['combined_text'])\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b54ef572",
+   "metadata": {
+    "papermill": {
+     "duration": 0.002604,
+     "end_time": "2025-05-10T15:24:45.807929",
+     "exception": false,
+     "start_time": "2025-05-10T15:24:45.805325",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "# Prediction"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "a28f0a44",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-05-10T15:24:45.814900Z",
+     "iopub.status.busy": "2025-05-10T15:24:45.814495Z",
+     "iopub.status.idle": "2025-05-10T15:24:46.097721Z",
+     "shell.execute_reply": "2025-05-10T15:24:46.097026Z"
+    },
+    "papermill": {
+     "duration": 0.288746,
+     "end_time": "2025-05-10T15:24:46.099522",
+     "exception": false,
+     "start_time": "2025-05-10T15:24:45.810776",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "from sklearn.model_selection import cross_val_score, cross_val_predict\n",
+    "from sklearn.linear_model import LogisticRegression\n",
+    "from sklearn.metrics import accuracy_score"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "9155569e",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-05-10T15:24:46.106562Z",
+     "iopub.status.busy": "2025-05-10T15:24:46.106240Z",
+     "iopub.status.idle": "2025-05-10T15:28:39.765341Z",
+     "shell.execute_reply": "2025-05-10T15:28:39.761609Z"
+    },
+    "papermill": {
+     "duration": 233.666437,
+     "end_time": "2025-05-10T15:28:39.768882",
+     "exception": false,
+     "start_time": "2025-05-10T15:24:46.102445",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Cross-validation scores: [0.08891809 0.10601781 0.09152617 0.09887251 0.09362637]\n",
+      "Mean cross-validation score: 0.09579219016108116\n",
+      "[[0.60275488 0.39724512]\n",
+      " [0.62327803 0.37672197]\n",
+      " [0.67474648 0.32525352]\n",
+      " [0.69165145 0.30834855]\n",
+      " [0.57853179 0.42146821]]\n"
+     ]
+    }
+   ],
+   "source": [
+    "y_train = data['winner_model_a']  # Example target\n",
+    "\n",
+    "# Initialize Logistic Regression (or other classifiers)\n",
+    "model = LogisticRegression(max_iter=1000,multi_class='ovr')\n",
+    "\n",
+    "# Perform cross-validation and get the cross-validation scores (accuracy)\n",
+    "cv_scores = cross_val_score(model, X_train_tfidf, y_train, cv=5, scoring='f1')\n",
+    "\n",
+    "# Print the cross-validation results\n",
+    "print(f\"Cross-validation scores: {cv_scores}\")\n",
+    "print(f\"Mean cross-validation score: {cv_scores.mean()}\")\n",
+    "\n",
+    "predictions = cross_val_predict(model, X_train_tfidf, y_train, cv=5, method='predict_proba')\n",
+    "\n",
+    "# predictions will have shape (n_samples, n_classes)\n",
+    "# Example: For 3 classes, each row will have 3 probabilities corresponding to model_a, model_b, and tie\n",
+    "\n",
+    "# Print example predictions (probabilities)\n",
+    "print(predictions[:5]) "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "9dba9ddb",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-05-10T15:28:39.781249Z",
+     "iopub.status.busy": "2025-05-10T15:28:39.779587Z",
+     "iopub.status.idle": "2025-05-10T15:29:06.962360Z",
+     "shell.execute_reply": "2025-05-10T15:29:06.960987Z"
+    },
+    "papermill": {
+     "duration": 27.190682,
+     "end_time": "2025-05-10T15:29:06.964240",
+     "exception": false,
+     "start_time": "2025-05-10T15:28:39.773558",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "   id  winner_model_a  winner_model_b  winner_tie\n",
+      "0   0        0.579693        0.420307         0.0\n",
+      "1   1        0.664225        0.335775         0.0\n",
+      "2   2        0.720744        0.279256         0.0\n",
+      "3   3        0.672279        0.327721         0.0\n",
+      "4   4        0.646681        0.353319         0.0\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Assuming the best model from cross-validation is chosen, we can predict on the test data\n",
+    "\n",
+    "# For simplicity, you can just fit the model on the entire dataset once cross-validation is done:\n",
+    "model.fit(X_train_tfidf, y_train)\n",
+    "\n",
+    "# Now make predictions on the test data\n",
+    "predictions = model.predict_proba(X_test_tfidf)\n",
+    "\n",
+    "# predictions will have shape (n_samples, 3) for 3 classes (model_a, model_b, tie)\n",
+    "test_data['winner_model_a'] = predictions[:, 0]  # Probabilities for model_a\n",
+    "test_data['winner_model_b'] = predictions[:, 1]  # Probabilities for model_b\n",
+    "test_data['winner_tie'] = 1 - (test_data['winner_model_a'] + test_data['winner_model_b'])\n",
+    "test_data['id'] = test_data.index\n",
+    "\n",
+    "# Save the results in the required format\n",
+    "output = test_data[['id', 'winner_model_a', 'winner_model_b', 'winner_tie']]\n",
+    "output.to_csv('predictions.csv', index=False)\n",
+    "\n",
+    "print(output.head())"
+   ]
+  }
+ ],
+ "metadata": {
+  "kaggle": {
+   "accelerator": "none",
+   "dataSources": [
+    {
+     "databundleVersionId": 9809560,
+     "sourceId": 86518,
+     "sourceType": "competition"
+    }
+   ],
+   "dockerImageVersionId": 31012,
+   "isGpuEnabled": false,
+   "isInternetEnabled": true,
+   "language": "python",
+   "sourceType": "notebook"
+  },
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.11.11"
+  },
+  "papermill": {
+   "default_parameters": {},
+   "duration": 336.55103,
+   "end_time": "2025-05-10T15:29:07.789084",
+   "environment_variables": {},
+   "exception": null,
+   "input_path": "__notebook__.ipynb",
+   "output_path": "__notebook__.ipynb",
+   "parameters": {},
+   "start_time": "2025-05-10T15:23:31.238054",
+   "version": "2.6.0"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
