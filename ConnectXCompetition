@@ -3,21 +3,21 @@
   {
    "cell_type": "code",
    "execution_count": 1,
-   "id": "52d24154",
+   "id": "9f33eb9e",
    "metadata": {
     "_cell_guid": "b1076dfc-b9ad-4769-8c92-a6c4dae69d19",
     "_uuid": "8f2839f25d086af736a60e9eeb907d3b93b6e0e5",
     "execution": {
-     "iopub.execute_input": "2025-05-29T22:44:13.191848Z",
-     "iopub.status.busy": "2025-05-29T22:44:13.191459Z",
-     "iopub.status.idle": "2025-05-29T22:44:16.908889Z",
-     "shell.execute_reply": "2025-05-29T22:44:16.907553Z"
+     "iopub.execute_input": "2025-05-30T00:08:47.853890Z",
+     "iopub.status.busy": "2025-05-30T00:08:47.853491Z",
+     "iopub.status.idle": "2025-05-30T00:08:49.765332Z",
+     "shell.execute_reply": "2025-05-30T00:08:49.764397Z"
     },
     "papermill": {
-     "duration": 3.725363,
-     "end_time": "2025-05-29T22:44:16.911239",
+     "duration": 1.917569,
+     "end_time": "2025-05-30T00:08:49.766880",
      "exception": false,
-     "start_time": "2025-05-29T22:44:13.185876",
+     "start_time": "2025-05-30T00:08:47.849311",
      "status": "completed"
     },
     "tags": []
@@ -81,19 +81,19 @@
   {
    "cell_type": "code",
    "execution_count": 2,
-   "id": "e37e653a",
+   "id": "a97d6afd",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-05-29T22:44:16.931828Z",
-     "iopub.status.busy": "2025-05-29T22:44:16.929975Z",
-     "iopub.status.idle": "2025-05-29T22:45:30.044766Z",
-     "shell.execute_reply": "2025-05-29T22:45:30.043174Z"
+     "iopub.execute_input": "2025-05-30T00:08:49.774160Z",
+     "iopub.status.busy": "2025-05-30T00:08:49.773563Z",
+     "iopub.status.idle": "2025-05-30T00:09:24.038982Z",
+     "shell.execute_reply": "2025-05-30T00:09:24.037981Z"
     },
     "papermill": {
-     "duration": 73.123449,
-     "end_time": "2025-05-29T22:45:30.048054",
+     "duration": 34.270907,
+     "end_time": "2025-05-30T00:09:24.040590",
      "exception": false,
-     "start_time": "2025-05-29T22:44:16.924605",
+     "start_time": "2025-05-30T00:08:49.769683",
      "status": "completed"
     },
     "tags": []
@@ -120,10 +120,10 @@
       "AttributeError: partially initialized module 'gymnasium' has no attribute 'register' (most likely due to a circular import)\n",
       "\u001b[0m\n",
       "  logger.warn(f\"plugin: {plugin.value} raised {traceback.format_exc()}\")\n",
-      "2025-05-29 22:45:03.323812: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:477] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered\n",
+      "2025-05-30 00:09:10.412994: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:477] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered\n",
       "WARNING: All log messages before absl::InitializeLog() is called are written to STDERR\n",
-      "E0000 00:00:1748558703.988072      13 cuda_dnn.cc:8310] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered\n",
-      "E0000 00:00:1748558704.167060      13 cuda_blas.cc:1418] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered\n"
+      "E0000 00:00:1748563750.625772      13 cuda_dnn.cc:8310] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered\n",
+      "E0000 00:00:1748563750.691358      13 cuda_blas.cc:1418] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered\n"
      ]
     }
    ],
@@ -142,19 +142,19 @@
   {
    "cell_type": "code",
    "execution_count": 3,
-   "id": "73da7fca",
+   "id": "7069a1a3",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-05-29T22:45:30.058425Z",
-     "iopub.status.busy": "2025-05-29T22:45:30.057433Z",
-     "iopub.status.idle": "2025-05-29T22:45:30.090814Z",
-     "shell.execute_reply": "2025-05-29T22:45:30.089415Z"
+     "iopub.execute_input": "2025-05-30T00:09:24.047515Z",
+     "iopub.status.busy": "2025-05-30T00:09:24.046878Z",
+     "iopub.status.idle": "2025-05-30T00:09:24.068997Z",
+     "shell.execute_reply": "2025-05-30T00:09:24.068181Z"
     },
     "papermill": {
-     "duration": 0.041325,
-     "end_time": "2025-05-29T22:45:30.093552",
+     "duration": 0.027137,
+     "end_time": "2025-05-30T00:09:24.070434",
      "exception": false,
-     "start_time": "2025-05-29T22:45:30.052227",
+     "start_time": "2025-05-30T00:09:24.043297",
      "status": "completed"
     },
     "tags": []
@@ -312,19 +312,19 @@
   {
    "cell_type": "code",
    "execution_count": 4,
-   "id": "9c7a2d5a",
+   "id": "dea57f3a",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-05-29T22:45:30.102897Z",
-     "iopub.status.busy": "2025-05-29T22:45:30.102356Z",
-     "iopub.status.idle": "2025-05-29T22:45:30.109765Z",
-     "shell.execute_reply": "2025-05-29T22:45:30.108377Z"
+     "iopub.execute_input": "2025-05-30T00:09:24.076767Z",
+     "iopub.status.busy": "2025-05-30T00:09:24.076473Z",
+     "iopub.status.idle": "2025-05-30T00:09:24.081248Z",
+     "shell.execute_reply": "2025-05-30T00:09:24.080338Z"
     },
     "papermill": {
-     "duration": 0.015172,
-     "end_time": "2025-05-29T22:45:30.112627",
+     "duration": 0.009617,
+     "end_time": "2025-05-30T00:09:24.082632",
      "exception": false,
-     "start_time": "2025-05-29T22:45:30.097455",
+     "start_time": "2025-05-30T00:09:24.073015",
      "status": "completed"
     },
     "tags": []
@@ -343,7 +343,7 @@
   },
   {
    "cell_type": "markdown",
-   "id": "f6904347",
+   "id": "5e85a708",
    "metadata": {
     "execution": {
      "iopub.execute_input": "2025-05-29T21:58:53.688123Z",
@@ -353,10 +353,10 @@
      "shell.execute_reply.started": "2025-05-29T21:58:53.688079Z"
     },
     "papermill": {
-     "duration": 0.002987,
-     "end_time": "2025-05-29T22:45:30.119633",
+     "duration": 0.002141,
+     "end_time": "2025-05-30T00:09:24.087255",
      "exception": false,
-     "start_time": "2025-05-29T22:45:30.116646",
+     "start_time": "2025-05-30T00:09:24.085114",
      "status": "completed"
     },
     "tags": []
@@ -400,19 +400,19 @@
   {
    "cell_type": "code",
    "execution_count": 5,
-   "id": "0bff14db",
+   "id": "36a018fa",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-05-29T22:45:30.129291Z",
-     "iopub.status.busy": "2025-05-29T22:45:30.127800Z",
-     "iopub.status.idle": "2025-05-29T22:45:40.526103Z",
-     "shell.execute_reply": "2025-05-29T22:45:40.524640Z"
+     "iopub.execute_input": "2025-05-30T00:09:24.093315Z",
+     "iopub.status.busy": "2025-05-30T00:09:24.092668Z",
+     "iopub.status.idle": "2025-05-30T00:09:33.464306Z",
+     "shell.execute_reply": "2025-05-30T00:09:33.463365Z"
     },
     "papermill": {
-     "duration": 10.405911,
-     "end_time": "2025-05-29T22:45:40.528728",
+     "duration": 9.376755,
+     "end_time": "2025-05-30T00:09:33.466267",
      "exception": false,
-     "start_time": "2025-05-29T22:45:30.122817",
+     "start_time": "2025-05-30T00:09:24.089512",
      "status": "completed"
     },
     "tags": []
@@ -483,7 +483,7 @@
        "  &quot;step&quot;: 0,\n",
        "  &quot;controls&quot;: true,\n",
        "  &quot;environment&quot;: {\n",
-       "    &quot;id&quot;: &quot;9f36296c-3cde-11f0-94e6-0242ac130202&quot;,\n",
+       "    &quot;id&quot;: &quot;57b656c8-3cea-11f0-8a69-0242ac130202&quot;,\n",
        "    &quot;name&quot;: &quot;connectx&quot;,\n",
        "    &quot;title&quot;: &quot;ConnectX&quot;,\n",
        "    &quot;description&quot;: &quot;Classic Connect in a row but configurable.&quot;,\n",
@@ -2366,7 +2366,7 @@
        "    [],\n",
        "    [\n",
        "      {\n",
-       "        &quot;duration&quot;: 0.960101,\n",
+       "        &quot;duration&quot;: 0.880491,\n",
        "        &quot;stdout&quot;: &quot;&quot;,\n",
        "        &quot;stderr&quot;: &quot;&quot;\n",
        "      },\n",
@@ -2375,14 +2375,14 @@
        "    [\n",
        "      {},\n",
        "      {\n",
-       "        &quot;duration&quot;: 0.940159,\n",
+       "        &quot;duration&quot;: 0.873925,\n",
        "        &quot;stdout&quot;: &quot;&quot;,\n",
        "        &quot;stderr&quot;: &quot;&quot;\n",
        "      }\n",
        "    ],\n",
        "    [\n",
        "      {\n",
-       "        &quot;duration&quot;: 0.964,\n",
+       "        &quot;duration&quot;: 0.823994,\n",
        "        &quot;stdout&quot;: &quot;&quot;,\n",
        "        &quot;stderr&quot;: &quot;&quot;\n",
        "      },\n",
@@ -2391,14 +2391,14 @@
        "    [\n",
        "      {},\n",
        "      {\n",
-       "        &quot;duration&quot;: 0.540243,\n",
+       "        &quot;duration&quot;: 0.490694,\n",
        "        &quot;stdout&quot;: &quot;&quot;,\n",
        "        &quot;stderr&quot;: &quot;&quot;\n",
        "      }\n",
        "    ],\n",
        "    [\n",
        "      {\n",
-       "        &quot;duration&quot;: 0.827573,\n",
+       "        &quot;duration&quot;: 0.747803,\n",
        "        &quot;stdout&quot;: &quot;&quot;,\n",
        "        &quot;stderr&quot;: &quot;&quot;\n",
        "      },\n",
@@ -2407,14 +2407,14 @@
        "    [\n",
        "      {},\n",
        "      {\n",
-       "        &quot;duration&quot;: 0.672852,\n",
+       "        &quot;duration&quot;: 0.600141,\n",
        "        &quot;stdout&quot;: &quot;&quot;,\n",
        "        &quot;stderr&quot;: &quot;&quot;\n",
        "      }\n",
        "    ],\n",
        "    [\n",
        "      {\n",
-       "        &quot;duration&quot;: 0.642745,\n",
+       "        &quot;duration&quot;: 0.599749,\n",
        "        &quot;stdout&quot;: &quot;&quot;,\n",
        "        &quot;stderr&quot;: &quot;&quot;\n",
        "      },\n",
@@ -2423,14 +2423,14 @@
        "    [\n",
        "      {},\n",
        "      {\n",
-       "        &quot;duration&quot;: 0.339667,\n",
+       "        &quot;duration&quot;: 0.31787,\n",
        "        &quot;stdout&quot;: &quot;&quot;,\n",
        "        &quot;stderr&quot;: &quot;&quot;\n",
        "      }\n",
        "    ],\n",
        "    [\n",
        "      {\n",
-       "        &quot;duration&quot;: 0.522338,\n",
+       "        &quot;duration&quot;: 0.481551,\n",
        "        &quot;stdout&quot;: &quot;&quot;,\n",
        "        &quot;stderr&quot;: &quot;&quot;\n",
        "      },\n",
@@ -2439,14 +2439,14 @@
        "    [\n",
        "      {},\n",
        "      {\n",
-       "        &quot;duration&quot;: 0.479101,\n",
+       "        &quot;duration&quot;: 0.449618,\n",
        "        &quot;stdout&quot;: &quot;&quot;,\n",
        "        &quot;stderr&quot;: &quot;&quot;\n",
        "      }\n",
        "    ],\n",
        "    [\n",
        "      {\n",
-       "        &quot;duration&quot;: 0.633675,\n",
+       "        &quot;duration&quot;: 0.582462,\n",
        "        &quot;stdout&quot;: &quot;&quot;,\n",
        "        &quot;stderr&quot;: &quot;&quot;\n",
        "      },\n",
@@ -2455,14 +2455,14 @@
        "    [\n",
        "      {},\n",
        "      {\n",
-       "        &quot;duration&quot;: 0.549947,\n",
+       "        &quot;duration&quot;: 0.533086,\n",
        "        &quot;stdout&quot;: &quot;&quot;,\n",
        "        &quot;stderr&quot;: &quot;&quot;\n",
        "      }\n",
        "    ],\n",
        "    [\n",
        "      {\n",
-       "        &quot;duration&quot;: 0.441713,\n",
+       "        &quot;duration&quot;: 0.427397,\n",
        "        &quot;stdout&quot;: &quot;&quot;,\n",
        "        &quot;stderr&quot;: &quot;&quot;\n",
        "      },\n",
@@ -2471,14 +2471,14 @@
        "    [\n",
        "      {},\n",
        "      {\n",
-       "        &quot;duration&quot;: 0.243504,\n",
+       "        &quot;duration&quot;: 0.238337,\n",
        "        &quot;stdout&quot;: &quot;&quot;,\n",
        "        &quot;stderr&quot;: &quot;&quot;\n",
        "      }\n",
        "    ],\n",
        "    [\n",
        "      {\n",
-       "        &quot;duration&quot;: 0.201462,\n",
+       "        &quot;duration&quot;: 0.191244,\n",
        "        &quot;stdout&quot;: &quot;&quot;,\n",
        "        &quot;stderr&quot;: &quot;&quot;\n",
        "      },\n",
@@ -2487,14 +2487,14 @@
        "    [\n",
        "      {},\n",
        "      {\n",
-       "        &quot;duration&quot;: 0.213192,\n",
+       "        &quot;duration&quot;: 0.193708,\n",
        "        &quot;stdout&quot;: &quot;&quot;,\n",
        "        &quot;stderr&quot;: &quot;&quot;\n",
        "      }\n",
        "    ],\n",
        "    [\n",
        "      {\n",
-       "        &quot;duration&quot;: 0.172029,\n",
+       "        &quot;duration&quot;: 0.110852,\n",
        "        &quot;stdout&quot;: &quot;&quot;,\n",
        "        &quot;stderr&quot;: &quot;&quot;\n",
        "      },\n",
@@ -2503,14 +2503,14 @@
        "    [\n",
        "      {},\n",
        "      {\n",
-       "        &quot;duration&quot;: 0.303275,\n",
+       "        &quot;duration&quot;: 0.221114,\n",
        "        &quot;stdout&quot;: &quot;&quot;,\n",
        "        &quot;stderr&quot;: &quot;&quot;\n",
        "      }\n",
        "    ],\n",
        "    [\n",
        "      {\n",
-       "        &quot;duration&quot;: 0.144131,\n",
+       "        &quot;duration&quot;: 0.114625,\n",
        "        &quot;stdout&quot;: &quot;&quot;,\n",
        "        &quot;stderr&quot;: &quot;&quot;\n",
        "      },\n",
@@ -2519,14 +2519,14 @@
        "    [\n",
        "      {},\n",
        "      {\n",
-       "        &quot;duration&quot;: 0.273601,\n",
+       "        &quot;duration&quot;: 0.220537,\n",
        "        &quot;stdout&quot;: &quot;&quot;,\n",
        "        &quot;stderr&quot;: &quot;&quot;\n",
        "      }\n",
        "    ],\n",
        "    [\n",
        "      {\n",
-       "        &quot;duration&quot;: 0.064138,\n",
+       "        &quot;duration&quot;: 0.055798,\n",
        "        &quot;stdout&quot;: &quot;&quot;,\n",
        "        &quot;stderr&quot;: &quot;&quot;\n",
        "      },\n",
@@ -2535,14 +2535,14 @@
        "    [\n",
        "      {},\n",
        "      {\n",
-       "        &quot;duration&quot;: 0.08692,\n",
+       "        &quot;duration&quot;: 0.076101,\n",
        "        &quot;stdout&quot;: &quot;&quot;,\n",
        "        &quot;stderr&quot;: &quot;&quot;\n",
        "      }\n",
        "    ],\n",
        "    [\n",
        "      {\n",
-       "        &quot;duration&quot;: 0.02916,\n",
+       "        &quot;duration&quot;: 0.025614,\n",
        "        &quot;stdout&quot;: &quot;&quot;,\n",
        "        &quot;stderr&quot;: &quot;&quot;\n",
        "      },\n",
@@ -2551,14 +2551,14 @@
        "    [\n",
        "      {},\n",
        "      {\n",
-       "        &quot;duration&quot;: 0.016512,\n",
+       "        &quot;duration&quot;: 0.014939,\n",
        "        &quot;stdout&quot;: &quot;&quot;,\n",
        "        &quot;stderr&quot;: &quot;&quot;\n",
        "      }\n",
        "    ],\n",
        "    [\n",
        "      {\n",
-       "        &quot;duration&quot;: 0.014512,\n",
+       "        &quot;duration&quot;: 0.013786,\n",
        "        &quot;stdout&quot;: &quot;&quot;,\n",
        "        &quot;stderr&quot;: &quot;&quot;\n",
        "      },\n",
@@ -3526,26 +3526,26 @@
     }
    ],
    "source": [
-    "env.run([timed_agent, timed_agent])\n",
+    "env.run([agent, agent])\n",
     "env.render(mode=\"ipython\")"
    ]
   },
   {
    "cell_type": "code",
    "execution_count": 6,
-   "id": "8035a764",
+   "id": "bfcd0d55",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-05-29T22:45:40.543451Z",
-     "iopub.status.busy": "2025-05-29T22:45:40.543043Z",
-     "iopub.status.idle": "2025-05-29T22:45:40.556647Z",
-     "shell.execute_reply": "2025-05-29T22:45:40.554855Z"
+     "iopub.execute_input": "2025-05-30T00:09:33.478186Z",
+     "iopub.status.busy": "2025-05-30T00:09:33.477833Z",
+     "iopub.status.idle": "2025-05-30T00:09:33.487777Z",
+     "shell.execute_reply": "2025-05-30T00:09:33.486886Z"
     },
     "papermill": {
-     "duration": 0.023149,
-     "end_time": "2025-05-29T22:45:40.558794",
+     "duration": 0.01732,
+     "end_time": "2025-05-30T00:09:33.489255",
      "exception": false,
-     "start_time": "2025-05-29T22:45:40.535645",
+     "start_time": "2025-05-30T00:09:33.471935",
      "status": "completed"
     },
     "tags": []
@@ -3555,7 +3555,7 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "<function agent at 0x7f6ae79239c0> written to submission.py\n"
+      "<function agent at 0x795ff9c637e0> written to submission.py\n"
      ]
     }
    ],
@@ -3563,7 +3563,7 @@
     "\n",
     "\n",
     "def write_agent_to_file(function, file):\n",
-    "    with open(file, \"a\" if os.path.exists(file) else \"w\") as f:\n",
+    "    with open(file, \"w\") as f:\n",
     "        f.write(inspect.getsource(function))\n",
     "        print(function, \"written to\", file)\n",
     "\n",
@@ -3606,14 +3606,14 @@
   },
   "papermill": {
    "default_parameters": {},
-   "duration": 99.157869,
-   "end_time": "2025-05-29T22:45:44.185172",
+   "duration": 53.139055,
+   "end_time": "2025-05-30T00:09:36.262804",
    "environment_variables": {},
    "exception": null,
    "input_path": "__notebook__.ipynb",
    "output_path": "__notebook__.ipynb",
    "parameters": {},
-   "start_time": "2025-05-29T22:44:05.027303",
+   "start_time": "2025-05-30T00:08:43.123749",
    "version": "2.6.0"
   }
  },
